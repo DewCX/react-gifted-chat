@@ -1,4 +1,4 @@
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import React, { useLayoutEffect, useState, useCallback, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
@@ -11,7 +11,7 @@ const ChatScreen = ( {navigation} ) => {
     useEffect(() => {
         setMessages ([
             {
-                id:1,
+                _id:1,
                 text:"Hello",
                 createdAt: new Date(),
                 user: {
@@ -25,6 +25,18 @@ const ChatScreen = ( {navigation} ) => {
 
     const onSend = useCallback((messages = []) => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+        const {
+            _id,
+            createdAt,
+            text,
+            user
+        }=messages[0]
+        db.collection('chat').add({
+            _id,
+            createdAt,
+            text,
+            user
+        })
     }, [])
 
 
@@ -66,9 +78,12 @@ const ChatScreen = ( {navigation} ) => {
     return (
         <GiftedChat
         messages={messages}
+        showAvatarForEveryMessage={true}
         onSend={messages => onSend(messages)}
         user = {{
-            _id:1,
+            _id: auth?.currentUser?.email,
+            name: auth?.currentUser?.displayName,
+            avatar: auth?.currentUser?.photoURL
         }}
         />
     )
