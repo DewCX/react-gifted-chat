@@ -1,12 +1,32 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Input, Button} from 'react-native-elements';
+import { auth } from '../firebase';
 
 const RegisterScreen = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [imageURL, setImageURL] = useState('');
+    const register = () => {
+        auth.createUserWithEmailAndPassword(email,password)
+            .then((userCredential) => {
+                //Signed in
+                var user = userCredential.user;
+                user.updateProfile({
+                    displayName: name,
+                    photoURL: imageURL? imageURL:"https://stonegatesl.com/wp-content/uploads/2021/01/avatar.jpg"
+                }).then(function () {
+                    //Update successful
+                }).catch(function (error) {
+                    // An error happened.
+                });
+            })
+            .catch((error) => {
+                var errorMessage = error.message;
+                alert(errorMessage)
+            });
+    }
 
 
     return (
@@ -40,7 +60,7 @@ const RegisterScreen = () => {
                 value={imageURL}
                 onChangeText={(text) => setImageURL(text)}
             />
-            <Button title="Register" style={styles.button} />
+            <Button title="Register" style={styles.button} onPress={register} />
       </View>
   
     )
