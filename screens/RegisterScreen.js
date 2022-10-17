@@ -15,7 +15,7 @@ const RegisterScreen = ( {navigation} ) => {
                 var user = userCredential.user;
                 user.updateProfile({
                     displayName: name,
-                    photoURL: imageURL ? imageURL:"https://stonegatesl.com/wp-content/uploads/2021/01/avatar.jpg"
+                    photoURL: imageURL? imageURL:"https://stonegatesl.com/wp-content/uploads/2021/01/avatar.jpg"
                 }).then(function () {
                     //Update successful
                 }).catch(function (error) {

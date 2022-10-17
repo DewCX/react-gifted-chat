@@ -44,7 +44,7 @@ const LoginScreen = ( {navigation} ) => {
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry
             />
-            <Button title="Sign in" style={styles.button} onPress={signIn}/>
+            <Button title="Sign in" style={styles.button} onPress={() => navigation.navigate('Chat')}/>
             <Button title="Register" style={styles.button} onPress={() => navigation.navigate('Register')} />
         </View>
     )
