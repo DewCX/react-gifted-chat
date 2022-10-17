@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Input, Button} from 'react-native-elements';
 import { auth } from '../firebase';
 
-const RegisterScreen = () => {
+const RegisterScreen = ( {navigation} ) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
@@ -15,12 +15,13 @@ const RegisterScreen = () => {
                 var user = userCredential.user;
                 user.updateProfile({
                     displayName: name,
-                    photoURL: imageURL? imageURL:"https://stonegatesl.com/wp-content/uploads/2021/01/avatar.jpg"
+                    photoURL: imageURL ? imageURL:"https://stonegatesl.com/wp-content/uploads/2021/01/avatar.jpg"
                 }).then(function () {
                     //Update successful
                 }).catch(function (error) {
                     // An error happened.
                 });
+                navigation.popToTop();
             })
             .catch((error) => {
                 var errorMessage = error.message;
