@@ -8,20 +8,35 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 const ChatScreen = ( {navigation} ) => {
     const [messages, setMessages] = useState([])
-    useEffect(() => {
-        setMessages ([
-            {
-                _id:1,
-                text:"Hello",
-                createdAt: new Date(),
-                user: {
-                    _id:2,
-                    name:"React Native",
-                    avatar:"https://upload.wikimedia.org/wikipedia/tr/6/6b/Gandalf.jpg",
-                },
-            },
-        ])
+
+    // useEffect(() => {
+    //     setMessages ([
+    //         {
+    //             _id:1,
+    //             text:"Hello",
+    //             createdAt: new Date(),
+    //             user: {
+    //                 _id:2,
+    //                 name:"React Native",
+    //                 avatar:"https://upload.wikimedia.org/wikipedia/tr/6/6b/Gandalf.jpg",
+    //             },
+    //         },
+    //     ])
+    // }, [])
+
+    useLayoutEffect(() => {
+        const unsubscribe = db.collection('chats').orderBy('createdAt','desc').onSnapshot(snapshot => setMessages(
+            snapshot.docs.map(doc=>({
+                _id:doc.data()._id,
+                createdAt:doc.data().createdAt.toDate(),
+                text:doc.data().text,
+                user:doc.data().user
+            }))
+        ))
+        return unsubscribe;
+
     }, [])
+        
 
     const onSend = useCallback((messages = []) => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
@@ -31,7 +46,7 @@ const ChatScreen = ( {navigation} ) => {
             text,
             user
         }=messages[0]
-        db.collection('chat').add({
+        db.collection('chats').add({
             _id,
             createdAt,
             text,
